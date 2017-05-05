@@ -26,6 +26,7 @@ gem 'puma', '~> 3.0'
 # gem 'rack-cors'
 
 gem 'devise_token_auth'
+gem 'devise_invitable'
 
 gem 'omniauth'
 

@@ -45,4 +45,9 @@ DeviseTokenAuth.setup do |config|
   # If, however, you wish to integrate with legacy Devise authentication, you can
   # do so by enabling this flag. NOTE: This feature is highly experimental!
   # config.enable_standard_devise_support = false
+
+  # The period the generated invitation token is valid, after
+  # this period, the invited resource won't be able to accept the invitation. 
+  # When invite_for is 0 (the default), the invitation won't expire.
+  # config.invite_for = 2.weeks
 end
