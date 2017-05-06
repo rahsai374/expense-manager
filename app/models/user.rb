@@ -6,5 +6,6 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :groups, through: :group_users
+  has_many :expenses 
 
 end
