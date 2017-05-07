@@ -3,6 +3,19 @@ class ExpensesController < ApplicationController
   before_action :authenticate_user!
 
   def index
+    expenses = []
+    current_user.expenses.user_expenses.unpaid.group_by(&:resource).each do |user, expense|
+      expenses << {user:  user.email, amount: expenses.sum(&:amount) }
+    end
+    render json: expenses
+  end
+
+  def group_expenses
+    expenses = []
+    current_user.expenses.group_expenses.unpaid.group_by(&:resource).each do |group, expense|
+      expenses << {group_title:  group.title, amount: expenses.sum(&:amount) }
+    end
+    render json: expenses
   end
 
   def create
@@ -33,7 +46,28 @@ class ExpensesController < ApplicationController
   end
 
   def settle_up
-    
+    pay_user = User.where(id: params[:user_id])
+    expenses = current_user.expense.where(resource: pay_user)
+    begin
+      Expense.transaction do
+      expenses.each do |expense|
+        expense.pay!
+      end
+    end
+    rescue Exception => e
+      return and render json: {sucess: false}
+    end
+    render json: {sucess: true}
+  end
+
+  def pay_amount_user
+    pay_user = User.where(id: params[:user_id])
+    if current_user.expense.create(amount: params[:amount], description: params[:description], resource: user)
+      render json: {sucess: true}
+    else
+      render json: {sucess: false}
+    end
+
   end
 
 

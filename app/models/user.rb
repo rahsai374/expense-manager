@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :groups, through: :group_users
-  has_many :expenses 
+  has_many :expenses, as: :resource 
+
+  scope :user_expenses, -> { where(resource_type: 'User') }
+  scope :group_expenses, -> { where(resource_type: 'Group') }
 
 end
