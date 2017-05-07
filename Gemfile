@@ -30,6 +30,10 @@ gem 'devise_invitable'
 gem 'active_model_serializers'
 gem 'aasm'
 
+# To generate test data
+gem 'factory_girl'
+gem 'forgery'
+
 gem 'omniauth'
 
 group :development, :test do
