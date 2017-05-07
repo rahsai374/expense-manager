@@ -32,6 +32,10 @@ class ExpensesController < ApplicationController
     render json: {sucess: true}
   end
 
+  def settle_up
+    
+  end
+
 
   private
     def create_user_expenses

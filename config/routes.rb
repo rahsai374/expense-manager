@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   devise_for :users, path: "auth", only: [:invitations],
     controllers: { invitations: 'invitations' }
 
-  resources :expenses
+  resources :expenses do
+    collection do 
+      put :settle_up
+    end
+  end
+
   resources :groups
 
   root to: 'devise_token_auth/registrations#create'
