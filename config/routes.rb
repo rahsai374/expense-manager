@@ -6,6 +6,9 @@ Rails.application.routes.draw do
     controllers: { invitations: 'invitations' }
 
   resources :expenses do
+    member do
+      put :update_group_expenses
+    end
     collection do
       get :group_expenses
       post :pay_amount_user

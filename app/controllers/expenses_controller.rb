@@ -25,7 +25,7 @@ class ExpensesController < ApplicationController
     elsif params[:emails].present?
       create_user_expenses
     end
-    render json: @expenses
+    render json: {sucess: true, expense: @expenses}
   end
 
   def show
@@ -67,7 +67,13 @@ class ExpensesController < ApplicationController
     else
       render json: {sucess: false}
     end
+  end
 
+  def update_group_expenses
+    @expense = current_user.expenses.find(id: params[:id]) rescue nil
+    render json: {sucess: false} and return if @expense.blank?
+    @expense.update_attributes(amount: params[:amount], description: params[:description], members: params[:members])
+    render json: {sucess: true, expense: @expense}
   end
 
 
@@ -88,5 +94,17 @@ class ExpensesController < ApplicationController
     end
 
     def create_group_expenses
+      @group = current_user.groups.includes(:users).find(id: params[:group_id]) rescue nil
+      render json: {sucess: false} and return  if @group.blank?
+      if params[:has_custom_amount]
+        members = params[:members]
+      else
+        amount_per_user = (params[:amount].to_f / @group.users.count)
+        members = {}
+        @group.users.each do |user|
+          members[user.id] = amount_per_user
+        end
+      end
+      @expenses << current_user.expenses.create(amount: params[:amount], description: params[:description], resource: @group, members: members)
     end
 end
